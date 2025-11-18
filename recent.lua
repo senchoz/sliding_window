@@ -5,7 +5,7 @@ function M.show_recent()
   local lines = {}
 
   for i = 1, math.min(3, #files) do
-    table.insert(lines, files[i])
+    lines[i] = files[i]
   end
 
   local buf = vim.api.nvim_create_buf(false, true)
@@ -20,12 +20,29 @@ function M.show_recent()
     row = 5,
     col = 5,
     style = "minimal",
-    border = "rounded"
+    border = "rounded",
   })
 
+  -- Quit with q
   vim.keymap.set("n", "q", function()
     vim.api.nvim_win_close(win, true)
   end, { buffer = buf })
+
+  -- Open file with Enter
+  vim.keymap.set("n", "<CR>", function()
+    -- get cursor line (1-indexed)
+    local cursor = vim.api.nvim_win_get_cursor(win)
+    local lnum = cursor[1]
+
+    local filename = lines[lnum]
+    if not filename then
+      return
+    end
+
+    vim.api.nvim_win_close(win, true)
+    vim.cmd("edit " .. filename)
+  end, { buffer = buf })
+
 end
 
 return M

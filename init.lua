@@ -4,6 +4,8 @@ local M = {}
 local popup  = require("sliding_window.popup")
 local recent = require("sliding_window.recent")
 
+require("sliding_window.yaml_id")
+
 function M.popup()
   return popup.show_popup()
 end
